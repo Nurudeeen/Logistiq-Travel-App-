@@ -4,7 +4,8 @@
   "description": "An application to give commmuters transportation logistics",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "keywords": [
     "Transportation",
@@ -22,6 +23,7 @@
   "author": "Nurudeeen",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.0.0",
     "express": "^4.17.3",
     "google-distance-matrix": "^1.1.1",
     "mongoose": "^6.2.3",

@@ -1,0 +1,30 @@
+{
+  "name": "logistiq",
+  "version": "1.0.0",
+  "description": "An application to give commmuters transportation logistics",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Transportation",
+    "Google",
+    "Distance",
+    "Matrix",
+    "logistics",
+    "traffic",
+    "node",
+    "js",
+    "express",
+    "mongoose",
+    "session"
+  ],
+  "author": "Nurudeeen",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.3",
+    "google-distance-matrix": "^1.1.1",
+    "mongoose": "^6.2.3",
+    "nodemon": "^2.0.15"
+  }
+}

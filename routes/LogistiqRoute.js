@@ -1,34 +1,32 @@
 const express = require('express')
 const router = express.Router()
 var distance = require('google-distance-matrix');
+
+const jwt = require("jsonwebtoken");
+const User = require('../models/LogistiqSchema');
+
 distance.key(process.env.API_KEY);
 
+
+
+
 distance.units('metric');
-// distance.mode('transit');
-// distance.transit_mode('bus');
-// var dat = "Boston"
-// var origins = ['San Francisco CA'];
-// origins.push (dat)
-// //console.log(origins)
-// var destinations = ['New York NY'];
 
-router.post('/', (req, res) => {
-
+router.post('/', async (req, res) => {
+    const token = req.headers['x-access-token']
+    
     const origins = []
     origins[0] = req.body.origin
 
     const destinations = []
     destinations[0] = req.body.destination
+    distance.mode('driving')
 
-    if (req.body.transit === true) {
-     distance.mode('transit');
-     distance.transit_mode('bus');
-    }else{
-        distance.mode('driving')
-        //return
-    }
+   try{ 
+    const decoded = jwt.verify(token, process.env.SECRET)
+    const email = decoded.email
     
-    distance.matrix(origins, destinations, function (err, distances) {
+    distance.matrix(origins, destinations, async  (err, distances) =>  {
         if (err) {
             return console.log(err);
         }
@@ -36,7 +34,6 @@ router.post('/', (req, res) => {
             return console.log('no distances');
         }
         if (distances.status == 'OK') {
-            res.json(distances);
             for (var i=0; i < origins.length; i++) {
                 for (var j = 0; j < destinations.length; j++) {
                     var origin = distances.origin_addresses[i];
@@ -46,15 +43,27 @@ router.post('/', (req, res) => {
                         var time = distances.rows[i].elements[j].duration.text;
                         console.log('Distance from ' + origin + ' to ' + destination + ' is ' + distance);
                         console.log('Time of travel from ' + origin + ' to ' + destination + ' is ' + time);
+                        await User.updateOne(
+                            { email: email },
+                            { $set: { distance: distance,
+                                      time: time
+                             } }
+                        )
+                
+                        return res.json({ status: 'ok',
+                                          distance: distance,
+                                          time: time
+                    })
                     } else {
                         console.log(destination + ' is not reachable by land from ' + origin);
                     }
                 }
             }
         }
-    });
-
+    })
+}catch(error){
+     return res.json({ status: 'error', error: 'invalid token' });
+};
   })
-
 
 module.exports = router

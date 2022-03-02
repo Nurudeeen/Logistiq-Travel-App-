@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000
 require ("dotenv").config();
 
 app.use("/magic", require("./routes/LogistiqRoute"))
-
+app.use('/', require('./routes/UserRoute'));
 
 
 

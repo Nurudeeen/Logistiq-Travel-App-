@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 5000
 require ("dotenv").config();
 
 app.use("/magic", require("./routes/LogistiqRoute"))

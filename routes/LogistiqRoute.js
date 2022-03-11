@@ -65,5 +65,18 @@ router.post('/', async (req, res) => {
      return res.json({ status: 'error', error: 'invalid token' });
 };
   })
+router.get('/', async (req, res) => {
+	const token = req.headers['x-access-token']
 
+	try {
+		const decoded = jwt.verify(token, process.env.SECRET)
+		const email = decoded.email
+		const user = await User.findOne({ email: email })
+
+		return res.json({ status: 'ok', distance: user.distance, time: user.time })
+	} catch (error) {
+		console.log(error)
+		res.json({ status: 'error', error: 'invalid token' })
+	}
+})
 module.exports = router
